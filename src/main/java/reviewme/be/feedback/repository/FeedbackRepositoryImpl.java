@@ -1,6 +1,7 @@
 package reviewme.be.feedback.repository;
 
 import static reviewme.be.feedback.entity.QFeedback.feedback;
+import static reviewme.be.util.entity.QLabel.label;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -27,7 +28,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepositoryCustom {
             .select(new QFeedbackInfo(
                 feedback.id,
                 feedback.content,
-                feedback.label.content,
+                label.content,
                 feedback.commenter.id,
                 feedback.commenter.name,
                 feedback.commenter.profileUrl,
@@ -37,6 +38,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepositoryCustom {
             ))
             .from(feedback)
             .innerJoin(feedback.commenter)
+            .leftJoin(feedback.label, label)
             .where(feedback.resume.id.eq(resumeId)
                 .and(feedback.resumePage.eq(resumePage))
                 .and(feedback.parentFeedback.isNull())
