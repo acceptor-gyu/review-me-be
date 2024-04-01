@@ -18,6 +18,7 @@ import reviewme.be.resume.dto.response.ResumeDetailResponse;
 import reviewme.be.resume.dto.response.ResumeResponse;
 import reviewme.be.resume.entity.Resume;
 import reviewme.be.resume.exception.BadFileExtensionException;
+import reviewme.be.resume.exception.NoAccessException;
 import reviewme.be.resume.exception.NonExistResumeException;
 import reviewme.be.resume.repository.ResumeRepository;
 import reviewme.be.resume.dto.request.UploadResumeRequest;
@@ -195,12 +196,12 @@ public class ResumeService {
         }
 
         if (user.isAnonymous() && !resume.isPublic()) {
-            throw new NonExistResumeException("접근 권한이 없습니다.");
+            throw new NoAccessException("접근 권한이 없습니다.");
         }
 
         if (resume.isFriendsOnly() && !friendService.isFriend(user.getId(),
             resume.getWriter().getId())) {
-            throw new NonExistResumeException("접근 권한이 없습니다.");
+            throw new NoAccessException("접근 권한이 없습니다.");
         }
 
         if (resume.isPrivate()) {
