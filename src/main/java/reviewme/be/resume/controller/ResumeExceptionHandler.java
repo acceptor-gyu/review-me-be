@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reviewme.be.custom.CustomErrorResponse;
 import reviewme.be.resume.exception.BadFileExtensionException;
+import reviewme.be.resume.exception.NoAccessException;
 import reviewme.be.resume.exception.NonExistResumeException;
 import reviewme.be.resume.exception.NotYourResumeException;
 
@@ -21,6 +22,17 @@ public class ResumeExceptionHandler {
             .body(new CustomErrorResponse(
                 "Bad Request",
                 400,
+                ex.getMessage()));
+    }
+
+    @ExceptionHandler(NoAccessException.class)
+    public ResponseEntity<CustomErrorResponse> noAccess(NoAccessException ex) {
+
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(new CustomErrorResponse(
+                "Forbidden",
+                403,
                 ex.getMessage()));
     }
 
