@@ -25,28 +25,28 @@ public class DefaultInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-//        String header = request.getHeader("Authorization");
-//
-//        if (header == null) {
-//            throw new NotLoggedInUserException("Authorization header가 존재하지 않습니다.");
-//        }
-//
-//        if (request.getHeader("Authorization").split(" ").length != 2) {
-//            throw new NoValidBearerFormatException("Bearer 토큰이 존재하지 않습니다.");
-//        }
-//
-//        String jwt = request.getHeader("Authorization").split(" ")[1];
-//
-//        if (jwtService.validateJwtIsManipulated(jwt)) {
-//            throw new InvalidJWTException("조작된 토큰입니다.");
-//        }
-//
-//        if (jwtService.validateJwtIsExpired(jwt)) {
-//            throw new InvalidJWTException("유효 기간이 만료된 토큰입니다.");
-//        }
-//
-//        UserProfileResponse loggedInUser = jwtService.extractUserFromJwt(jwt, UserProfileResponse.class);
-        User user = userService.getUserById(2L);
+        String header = request.getHeader("Authorization");
+
+        if (header == null) {
+            throw new NotLoggedInUserException("Authorization header가 존재하지 않습니다.");
+        }
+
+        if (request.getHeader("Authorization").split(" ").length != 2) {
+            throw new NoValidBearerFormatException("Bearer 토큰이 존재하지 않습니다.");
+        }
+
+        String jwt = request.getHeader("Authorization").split(" ")[1];
+
+        if (jwtService.validateJwtIsManipulated(jwt)) {
+            throw new InvalidJWTException("조작된 토큰입니다.");
+        }
+
+        if (jwtService.validateJwtIsExpired(jwt)) {
+            throw new InvalidJWTException("유효 기간이 만료된 토큰입니다.");
+        }
+
+        UserProfileResponse loggedInUser = jwtService.extractUserFromJwt(jwt, UserProfileResponse.class);
+        User user = userService.getUserById(loggedInUser.getId());
         request.setAttribute("user", user);
 
         return true;
