@@ -14,7 +14,9 @@ import reviewme.be.resume.dto.response.QResumeResponse;
 import reviewme.be.resume.dto.response.ResumeResponse;
 
 import java.util.List;
+import reviewme.be.user.entity.User;
 
+import static reviewme.be.friend.entity.QFriend.friend;
 import static reviewme.be.resume.entity.QResume.resume;
 
 @RequiredArgsConstructor
@@ -23,35 +25,40 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<ResumeResponse> findResumes(ResumeSearchCondition searchCondition, Pageable pageable) {
+    public Page<ResumeResponse> findResumes(ResumeSearchCondition searchCondition, User user,
+        Pageable pageable) {
+
+        System.out.println("searchCondition = " + searchCondition.getScope());
 
         QueryResults<ResumeResponse> results = queryFactory
-                .select(new QResumeResponse(
-                        resume.id,
-                        resume.title,
-                        resume.writer.id,
-                        resume.writer.name,
-                        resume.writer.profileUrl,
-                        resume.createdAt,
-                        resume.scope.scope,
-                        resume.occupation.occupation,
-                        resume.year
-                ))
-                .from(resume)
-                .leftJoin(resume.writer)
-                .leftJoin(resume.scope)
-                .leftJoin(resume.occupation)
-                .where(
-                        scopeIdEq(searchCondition.getScope()),
-                        occupationEq(searchCondition.getOccupation()),
-                        yearGoe(searchCondition.getStartYear()),
-                        yearLoe(searchCondition.getEndYear()),
-                        resume.deletedAt.isNull()
-                )
-                .orderBy(resume.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
+            .select(new QResumeResponse(
+                resume.id,
+                resume.title,
+                resume.writer.id,
+                resume.writer.name,
+                resume.writer.profileUrl,
+                resume.createdAt,
+                resume.scope.scope,
+                resume.occupation.occupation,
+                resume.year
+            ))
+            .from(resume)
+            .leftJoin(resume.writer)
+            .leftJoin(resume.scope)
+            .leftJoin(resume.occupation)
+            .leftJoin(friend).on(friend.followingUser.id.eq(resume.writer.id))
+            .where(
+                scopeCondition(searchCondition.getScope(), user),
+                occupationEq(searchCondition.getOccupation()),
+                yearGoe(searchCondition.getStartYear()),
+                yearLoe(searchCondition.getEndYear()),
+                resume.deletedAt.isNull()
+            )
+            .distinct()
+            .orderBy(resume.id.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetchResults();
 
         List<ResumeResponse> content = results.getResults();
         long total = results.getTotal();
@@ -63,26 +70,26 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
     public Page<MyResumeResponse> findResumesByWriterId(Pageable pageable, long userId) {
 
         QueryResults<MyResumeResponse> results = queryFactory
-                .select(new QMyResumeResponse(
-                        resume.id,
-                        resume.title,
-                        resume.createdAt,
-                        resume.scope.scope,
-                        resume.occupation.occupation,
-                        resume.year
-                ))
-                .from(resume)
-                .leftJoin(resume.writer)
-                .leftJoin(resume.scope)
-                .leftJoin(resume.occupation)
-                .where(
-                        resume.writer.id.eq(userId),
-                        resume.deletedAt.isNull()
-                )
-                .orderBy(resume.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
+            .select(new QMyResumeResponse(
+                resume.id,
+                resume.title,
+                resume.createdAt,
+                resume.scope.scope,
+                resume.occupation.occupation,
+                resume.year
+            ))
+            .from(resume)
+            .leftJoin(resume.writer)
+            .leftJoin(resume.scope)
+            .leftJoin(resume.occupation)
+            .where(
+                resume.writer.id.eq(userId),
+                resume.deletedAt.isNull()
+            )
+            .orderBy(resume.id.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetchResults();
 
         List<MyResumeResponse> content = results.getResults();
         long total = results.getTotal();
@@ -90,9 +97,26 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression scopeIdEq(Integer scopeId) {
+    private BooleanExpression scopeCondition(int scopeId, User user) {
 
-        return scopeId != null ? resume.scope.id.loe(scopeId) : null;
+        int publicOnly = 1;
+        int friendsOnly = 2;
+
+        BooleanExpression publicCondition = resume.scope.id.eq(publicOnly);
+
+        if (scopeId == friendsOnly) {
+
+            BooleanExpression friendCondition = resume.scope.id.eq(friendsOnly)
+                .and(resume.writer.id.in(
+                    queryFactory.select(friend.followerUser.id)
+                        .from(friend)
+                        .where(friend.followingUser.id.eq(user.getId()))
+                ));
+
+            return publicCondition.or(friendCondition);
+        }
+
+        return publicCondition;
     }
 
     private BooleanExpression occupationEq(Integer occupationId) {
