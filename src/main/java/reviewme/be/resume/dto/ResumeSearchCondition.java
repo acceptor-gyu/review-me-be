@@ -12,7 +12,7 @@ import reviewme.be.resume.dto.request.ResumeSearchConditionParam;
 @AllArgsConstructor
 public class ResumeSearchCondition {
 
-    private Integer scope;
+    private int scope;
     private Integer occupation;
     private Integer startYear;
     private Integer endYear;
