@@ -110,8 +110,9 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
                 .and(resume.writer.id.in(
                     queryFactory.select(friend.followerUser.id)
                         .from(friend)
-                        .where(friend.followingUser.id.eq(user.getId()))
-                ));
+                        .where(friend.followingUser.id.eq(user.getId())
+                            .or(friend.followerUser.id.eq(user.getId()))))
+                );
 
             return publicCondition.or(friendCondition);
         }
