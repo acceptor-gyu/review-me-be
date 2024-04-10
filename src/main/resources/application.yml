@@ -27,3 +27,9 @@ springdoc:
       enabled: true
   cache:
     disabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
