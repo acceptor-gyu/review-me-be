@@ -28,6 +28,8 @@ jobs:
         run: |
           touch src/main/resources/application.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+          ls -al src/main/resources
+
       - name: Test with Gradle
         run: |
           chmod +x gradlew
