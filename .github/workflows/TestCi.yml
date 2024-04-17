@@ -29,6 +29,7 @@ jobs:
           touch src/main/resources/application.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
           cat src/main/resources/application.properties
+          pwd
       - name: Test with Gradle
         run: |
           chmod +x gradlew
