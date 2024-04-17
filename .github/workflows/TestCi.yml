@@ -28,7 +28,7 @@ jobs:
         run: |
           touch src/main/resources/application.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
-          cat src/main/resources/application.properties | tail - 5
+          cat src/main/resources/application.properties | tail -5
 
       - name: Test with Gradle
         run: |
