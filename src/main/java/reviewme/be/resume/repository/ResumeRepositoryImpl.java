@@ -48,11 +48,12 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
             .leftJoin(resume.occupation)
             .leftJoin(friend).on(friend.followingUser.id.eq(resume.writer.id))
             .where(
-                scopeCondition(searchCondition.getScope(), user),
-                occupationEq(searchCondition.getOccupation()),
-                yearGoe(searchCondition.getStartYear()),
-                yearLoe(searchCondition.getEndYear()),
-                resume.deletedAt.isNull()
+                resume.writer.id.eq(user.getId())
+                    .or(scopeCondition(searchCondition.getScope(), user)
+                        .and(occupationEq(searchCondition.getOccupation()))
+                        .and(yearGoe(searchCondition.getStartYear()))
+                        .and(yearLoe(searchCondition.getEndYear())))
+                    .and(resume.deletedAt.isNull())
             )
             .distinct()
             .orderBy(resume.id.desc())
@@ -110,8 +111,9 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
                 .and(resume.writer.id.in(
                     queryFactory.select(friend.followerUser.id)
                         .from(friend)
-                        .where(friend.followingUser.id.eq(user.getId())
-                            .or(friend.followerUser.id.eq(user.getId()))))
+                        .where((friend.followingUser.id.eq(user.getId())
+                            .or(friend.followerUser.id.eq(user.getId())))
+                            .and(friend.accepted.isTrue())))
                 );
 
             return publicCondition.or(friendCondition);
