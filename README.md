@@ -3,12 +3,14 @@
 
 ## 🧾 기술 스택
 
-### 공통
+### Application Server
 
-![Git](https://img.shields.io/badge/-Git-F05032?style=flat&logo=Git&logoColor=white)
-![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat&logo=GitHub&logoColor=white)
+<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=Gradle&logoColor=white"/> <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring%20Data%20JPA-03EF62?style=flat"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> ![QueryDSL](https://img.shields.io/badge/QueryDSL-blueviolet?style=flat)
+![OAuth 2.0](https://img.shields.io/badge/OAuth-EB5424?style=flat) ![Swagger](https://img.shields.io/badge/Swagger-63E296?style=flat&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/-IntelliJ%20IDEA-FF3850?style=flat&logo=IntelliJ%20IDEA&logoColor=white)
+<br><br>
 
-### Infrastructure & CI/CD
+### Infrastructure
 
 ![AWS EC2](https://img.shields.io/badge/Amazon%20EC2-FA7343?style=flat&logo=amazonec2&logoColor=white)
 ![AWS S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=flat&logo=amazons3&logoColor=white)
@@ -18,9 +20,5 @@
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat&logo=nginx&logoColor=white)
 ![Github Actions](https://img.shields.io/badge/Github%20Actions-2088FF?style=flat&logo=GithubActions&logoColor=white)
 
-### Back-End
+## Infrastructure structure diagram
 
-<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=Gradle&logoColor=white"/> <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring%20Data%20JPA-03EF62?style=flat"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> ![QueryDSL](https://img.shields.io/badge/QueryDSL-blueviolet?style=flat)
-![OAuth 2.0](https://img.shields.io/badge/OAuth-EB5424?style=flat) ![Swagger](https://img.shields.io/badge/Swagger-63E296?style=flat&logoColor=white)
-![IntelliJ IDEA](https://img.shields.io/badge/-IntelliJ%20IDEA-FF3850?style=flat&logo=IntelliJ%20IDEA&logoColor=white)
-<br><br>
