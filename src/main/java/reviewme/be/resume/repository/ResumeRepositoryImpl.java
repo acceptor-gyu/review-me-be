@@ -28,8 +28,6 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
     public Page<ResumeResponse> findResumes(ResumeSearchCondition searchCondition, User user,
         Pageable pageable) {
 
-        System.out.println("searchCondition = " + searchCondition.getScope());
-
         QueryResults<ResumeResponse> results = queryFactory
             .select(new QResumeResponse(
                 resume.id,
@@ -49,10 +47,10 @@ public class ResumeRepositoryImpl implements ResumeRepositoryCustom {
             .leftJoin(friend).on(friend.followingUser.id.eq(resume.writer.id))
             .where(
                 resume.writer.id.eq(user.getId())
-                    .or(scopeCondition(searchCondition.getScope(), user)
+                    .or(scopeCondition(searchCondition.getScope(), user))
                         .and(occupationEq(searchCondition.getOccupation()))
                         .and(yearGoe(searchCondition.getStartYear()))
-                        .and(yearLoe(searchCondition.getEndYear())))
+                        .and(yearLoe(searchCondition.getEndYear()))
                     .and(resume.deletedAt.isNull())
             )
             .distinct()
