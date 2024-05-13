@@ -38,7 +38,7 @@ public class ResumeController {
     private final ResumeService resumeService;
 
     @Operation(summary = "이력서 업로드", description = "이력서를 업로드합니다.")
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "이력서 업로드 성공"),
         @ApiResponse(responseCode = "400", description = "이력서 업로드 실패")

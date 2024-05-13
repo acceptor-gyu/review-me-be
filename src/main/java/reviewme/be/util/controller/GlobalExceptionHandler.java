@@ -2,6 +2,7 @@ package reviewme.be.util.controller;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +94,7 @@ public class GlobalExceptionHandler {
                         404,
                         ex.getMessage()));
     }
+
     @ExceptionHandler(NonExistScopeException.class)
     public ResponseEntity<CustomErrorResponse> nonExistScope(NonExistScopeException ex) {
 
@@ -135,5 +137,17 @@ public class GlobalExceptionHandler {
                         "Unauthorized",
                         401,
                         ex.getMessage()));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SizeLimitExceededException.class)
+    public ResponseEntity<CustomErrorResponse> sizeLimitExceededException(SizeLimitExceededException ex) {
+
+        return ResponseEntity
+            .badRequest()
+            .body(new CustomErrorResponse(
+                "업로드할 수 있는 pdf의 최대 크기를 초과했습니다",
+                400,
+                ex.getMessage()));
     }
 }
